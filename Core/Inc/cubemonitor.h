@@ -10,6 +10,8 @@
 #ifndef INC_CUBEMONITOR_H_
 #define INC_CUBEMONITOR_H_
 
+#define CUBEMDEBUG 1
+
 #define CUBEMONMAXSIGNALS 8
 #define CUBEMONSMALLBUFSIZE 20
 
@@ -27,5 +29,9 @@ uint8_t CubeM_attendFloatValue(uint8_t, float, uint8_t);
 uint8_t CubeM_setDelimiter(uint8_t *);
 uint8_t CubeM_setEOL(uint8_t *);
 uint8_t CubeM_sendBuffer();
+
+#if CUBEMDEBUG
+uint8_t CubeM_runDebugTests();
+#endif
 
 #endif /* INC_CUBEMONITOR_H_ */

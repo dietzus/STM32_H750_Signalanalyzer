@@ -106,13 +106,9 @@ int main(void)
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
 
-  CubeM_setChannelname(0, (uint8_t*)"Test0");
-  CubeM_attendUIntValue(0, 123);
-  CubeM_attendIntValue(1, -123);
-  CubeM_attendFloatValue(2, 0.123, 3);
-  CubeM_attendFloatValue(2, 0.123, 2);
-
-  CubeM_sendBuffer();
+#ifdef CUBEMDEBUG
+  CubeM_runDebugTests();
+#endif
 
   /* USER CODE END 2 */
 
