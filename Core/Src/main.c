@@ -75,7 +75,9 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-	CubeM_init();
+#if CUBEMDEBUG==0
+	CubeM_Init();
+#endif
 
   /* USER CODE END 1 */
 

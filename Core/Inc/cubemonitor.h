@@ -16,7 +16,8 @@
 #define CUBEMONSMALLBUFSIZE 20
 
 void CubeM_DefChNamesInit();
-void CubeM_init();
+uint32_t CubeM_defInit();
+uint32_t CubeM_Init(uint32_t);
 void CubeM_setUART();		//Currently not used
 uint32_t CubeM_setBufferSize(uint32_t);
 uint8_t CubeM_setChannelname(uint8_t, uint8_t *newname);

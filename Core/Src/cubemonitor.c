@@ -18,6 +18,7 @@ uint8_t useUART = 0;
 
 uint32_t buffersize = 0;
 uint32_t usedbuffer = 0;
+uint8_t emptybuffer = 1;
 uint8_t *buffer;
 
 uint8_t delimiter[CUBEMONSMALLBUFSIZE] = ",";
@@ -37,12 +38,36 @@ void CubeM_DefChNamesInit() {
 	}
 }
 
-void CubeM_init() {
+void CubeM_getStrLengths() {
+	dellen = strlen((char*)delimiter);
+	conlen = strlen((char*)connector);
+	EOLlen = strlen((char*)EOL);
+}
+
+uint32_t CubeM_defInit() {
 	CubeM_DefChNamesInit();
 
-	CubeM_setBufferSize(50);
+	uint32_t tempsize = CubeM_setBufferSize(50);
 
+	CubeM_getStrLengths();
 	isInit = 1;
+
+	return tempsize;
+}
+
+uint32_t CubeM_Init(uint32_t bufsize) {
+	CubeM_DefChNamesInit();
+
+	uint32_t tempsize = CubeM_setBufferSize(bufsize);
+
+	if(tempsize == 0 || tempsize!=bufsize) {
+		tempsize = CubeM_setBufferSize(50);
+	}
+
+	CubeM_getStrLengths();
+	isInit = 1;
+
+	return tempsize;
 }
 
 //Currently not used
@@ -59,6 +84,7 @@ uint32_t CubeM_setBufferSize(uint32_t sizeb) {
 			buffer[0] = '\0';
 
 			buffersize = sizeb;
+			emptybuffer = 1;
 			usedbuffer = 0;
 		}
 	}
@@ -85,7 +111,15 @@ uint8_t CubeM_setBuffer(uint8_t *input, uint32_t length) {
 		free(buffer);
 		buffer = input;
 		buffersize = length;
-		usedbuffer = 0;
+		uint32_t templen = strlen((char*)input);
+		if(templen == 0) {
+			emptybuffer = 1;
+			usedbuffer = 0;
+		} else {
+			emptybuffer = 0;
+			usedbuffer = templen;
+		}
+
 		return 0;
 	}
 	return 1;
@@ -102,22 +136,40 @@ uint8_t CubeM_attendBuffer(uint8_t *input) {
 	return 1;
 }
 
+//uint8_t CubeM_attendUIntValue(uint8_t channel, uint32_t value) {
+//	if(channel >= 0 && channel < CUBEMONMAXSIGNALS) {
+//		char tempstring[CUBEMONSMALLBUFSIZE*4];
+//
+//		uint32_t tempsize;
+//		if(usedbuffer == 0) {
+//			sprintf(tempstring, "%s%s%ld", channelnames[channel], connector, value);
+//			tempsize = usedbuffer + strlen((char*)tempstring) + EOLlen;
+//		} else {
+//			sprintf(tempstring, "%s%s%s%ld", delimiter, channelnames[channel], connector, value);
+//			tempsize = usedbuffer + strlen((char*)tempstring);
+//		}
+//
+//		if(tempsize < buffersize) {
+//			strcat((char*)buffer, (char*)tempstring);
+//			usedbuffer = tempsize;
+//			return 0;
+//		}
+//	}
+//	return 1;
+//}
+
 uint8_t CubeM_attendUIntValue(uint8_t channel, uint32_t value) {
 	if(channel >= 0 && channel < CUBEMONMAXSIGNALS) {
 		char tempstring[CUBEMONSMALLBUFSIZE*4];
 
 		uint32_t tempsize;
-		if(usedbuffer == 0) {
-			sprintf(tempstring, "%s%s%ld", channelnames[channel], connector, value);
-			tempsize = usedbuffer + strlen((char*)tempstring) + EOLlen;
-		} else {
-			sprintf(tempstring, "%s%s%s%ld", delimiter, channelnames[channel], connector, value);
-			tempsize = usedbuffer + strlen((char*)tempstring);
-		}
+		sprintf(tempstring, "%s%s%s%ld", delimiter, channelnames[channel], connector, value);
+		tempsize = usedbuffer + strlen((char*)tempstring) - (emptybuffer * dellen);
 
 		if(tempsize < buffersize) {
-			strcat((char*)buffer, (char*)tempstring);
+			strcpy((char*)(buffer + (usedbuffer)), (char*)(tempstring + (emptybuffer * dellen)));
 			usedbuffer = tempsize;
+			emptybuffer = 0;
 			return 0;
 		}
 	}
@@ -129,17 +181,13 @@ uint8_t CubeM_attendIntValue(uint8_t channel, int32_t value) {
 		char tempstring[CUBEMONSMALLBUFSIZE*4];
 
 		uint32_t tempsize;
-		if(usedbuffer == 0) {
-			sprintf(tempstring, "%s%s%ld", channelnames[channel], connector, value);
-			tempsize = usedbuffer + strlen((char*)tempstring) + EOLlen;
-		} else {
-			sprintf(tempstring, "%s%s%s%ld", delimiter, channelnames[channel], connector, value);
-			tempsize = usedbuffer + strlen((char*)tempstring);
-		}
+		sprintf(tempstring, "%s%s%s%ld", delimiter, channelnames[channel], connector, value);
+		tempsize = usedbuffer + strlen((char*)tempstring) - (emptybuffer * dellen);
 
 		if(tempsize < buffersize) {
-			strcat((char*)buffer, (char*)tempstring);
+			strcpy((char*)(buffer + (usedbuffer)), (char*)(tempstring + (emptybuffer * dellen)));
 			usedbuffer = tempsize;
+			emptybuffer = 0;
 			return 0;
 		}
 	}
@@ -151,17 +199,13 @@ uint8_t CubeM_attendFloatValue(uint8_t channel, float value, uint8_t precision) 
 		char tempstring[CUBEMONSMALLBUFSIZE*4];
 
 		uint32_t tempsize;
-		if(usedbuffer == 0) {
-			sprintf(tempstring, "%s%s%.*f", channelnames[channel], connector, precision, value);
-			tempsize = usedbuffer + strlen((char*)tempstring) + EOLlen;
-		} else {
-			sprintf(tempstring, "%s%s%s%.*f", delimiter, channelnames[channel], connector, precision, value);
-			tempsize = usedbuffer + strlen((char*)tempstring);
-		}
+		sprintf(tempstring, "%s%s%s%.*f", delimiter, channelnames[channel], connector, precision, value);
+		tempsize = usedbuffer + strlen((char*)tempstring) - (emptybuffer * dellen);
 
 		if(tempsize < buffersize) {
-			strcat((char*)buffer, (char*)tempstring);
+			strcpy((char*)(buffer + (usedbuffer)), (char*)(tempstring + (emptybuffer * dellen)));
 			usedbuffer = tempsize;
+			emptybuffer = 0;
 			return 0;
 		}
 	}
@@ -196,10 +240,13 @@ uint8_t CubeM_sendBuffer() {
 
 #if CUBEMDEBUG
 uint8_t CubeM_runDebugTests() {
-	CubeM_init();
+	CubeM_Init(100);
 
 	CubeM_setChannelname(0, (uint8_t*)"Test0");
 	CubeM_attendUIntValue(0, 123);
+	CubeM_attendUIntValue(0, 234);
+	CubeM_attendUIntValue(1, 123);
+	CubeM_attendUIntValue(1, 234);
 	CubeM_attendIntValue(1, -123);
 	CubeM_attendFloatValue(2, 0.123, 3);
 	CubeM_attendFloatValue(2, 0.123, 2);
