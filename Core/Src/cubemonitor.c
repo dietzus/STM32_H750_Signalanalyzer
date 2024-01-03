@@ -228,6 +228,13 @@ uint8_t CubeM_setDataType(uint8_t channel, cubeMDataType newtype) {
 	return 0;
 }
 
+uint8_t CubeM_setPrecision(uint8_t channel, int8_t precision) {
+	if(channel >= CUBEMONMAXSIGNALS) return 1;
+
+	channels[channel].precision = precision;
+	return 0;
+}
+
 uint8_t CubeM_setUINTValue(uint8_t channel, float value) {
 
 	if(channel >= CUBEMONMAXSIGNALS || channels[channel].datatype != CUBEMUINT) return 1;
@@ -309,6 +316,10 @@ uint8_t CubeM_sendCurValues() {
 		channels[i].newvalue = channels[i].reuseoldvalue;
 	}
 
+	if(datatowrite == 1) {
+		CubeM_sendBuffer();
+	}
+
 	return 0;
 }
 
@@ -349,25 +360,41 @@ uint8_t CubeM_runDebugTests() {
 	errornumber++;
 	if(CubeM_attendFloatValue(2, 0.123, 2) != 0) CubeM_DEBUGERRORHANDLER(errornumber);
 
-	errornumber++;
-	if(CubeM_setDataType(0, CUBEMUINT)!= 0) CubeM_DEBUGERRORHANDLER(errornumber);
+	uint8_t debugchnumbers[] = {0, 1, 2, 3, 4};
+	cubeMDataType debugdatatypes[] = {CUBEMUINT, CUBEMINT, CUBEMFLOAT, CUBEMDOUBLE, CUBEMLDOUBLE};
+	uint8_t debugprecisionvalues[] = {2, 3, 4, 5, 6};
+
+	for(uint8_t i=0; i<CUBEMNROFDATATYPES; i++) {
+		errornumber++;
+		if(CubeM_setDataType(debugchnumbers[i], debugdatatypes[i])!= 0) CubeM_DEBUGERRORHANDLER(errornumber);
+
+		errornumber++;
+		if(channels[debugchnumbers[i]].datatype != debugdatatypes[i]) CubeM_DEBUGERRORHANDLER(errornumber);
+
+		errornumber++;
+		if(CubeM_setPrecision(debugchnumbers[i], debugprecisionvalues[i])!= 0) CubeM_DEBUGERRORHANDLER(errornumber);
+	}
 
 	errornumber++;
-	if(channels[0].datatype != CUBEMUINT) CubeM_DEBUGERRORHANDLER(errornumber);
+	if(CubeM_setValue(debugchnumbers[0], (uint32_t)123) != 0) CubeM_DEBUGERRORHANDLER(errornumber);
 
 	errornumber++;
-	if(CubeM_setDataType(1, CUBEMINT)!= 0) CubeM_DEBUGERRORHANDLER(errornumber);
+	if(CubeM_setValue(debugchnumbers[1], (int32_t)-123) != 0) CubeM_DEBUGERRORHANDLER(errornumber);
 
 	errornumber++;
-	if(channels[1].datatype != CUBEMINT) CubeM_DEBUGERRORHANDLER(errornumber);
+	if(CubeM_setValue(debugchnumbers[2], (float)0.123456789) != 0) CubeM_DEBUGERRORHANDLER(errornumber);
 
 	errornumber++;
-	if(CubeM_setDataType(0, CUBEMUINT)!= 0) CubeM_DEBUGERRORHANDLER(errornumber);
+	if(CubeM_setValue(debugchnumbers[3], (double)0.123456789) != 0) CubeM_DEBUGERRORHANDLER(errornumber);
 
 	errornumber++;
-	if(channels[0].datatype != CUBEMUINT) CubeM_DEBUGERRORHANDLER(errornumber);
+	if(CubeM_setValue(debugchnumbers[4], (long double)0.123456789) != 0) CubeM_DEBUGERRORHANDLER(errornumber);
 
 	errornumber++;
+	if(CubeM_setValue(debugchnumbers[0], (float)0.123456789) != 1) CubeM_DEBUGERRORHANDLER(errornumber);
+
+	errornumber++;
+	if(CubeM_sendCurValues() != 0) CubeM_DEBUGERRORHANDLER(errornumber);
 
 	uint8_t tempstatus = 0;
 	uint32_t tempcounter = 0;
@@ -376,8 +403,17 @@ uint8_t CubeM_runDebugTests() {
 		tempcounter++;
 	}
 
+	errornumber++;
+	if(usedbuffer == 0 || emptybuffer == 1 || buffer[0] == '\0') CubeM_DEBUGERRORHANDLER(errornumber);
+
 	HAL_Delay(3000);
 	CubeM_sendBuffer();
+
+	errornumber++;
+	if(CubeM_clearBuffer() != 0) CubeM_DEBUGERRORHANDLER(errornumber);
+
+	errornumber++;
+	if(usedbuffer != 0 || emptybuffer != 1 || buffer[0] != '\0') CubeM_DEBUGERRORHANDLER(errornumber);
 
 	return 0;
 }
