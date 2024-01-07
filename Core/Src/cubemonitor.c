@@ -28,15 +28,15 @@ uint8_t conlen = 0;
 uint8_t EOL[CUBEMONSMALLBUFSIZE] = "\n";
 uint8_t EOLlen = 0;
 
-cubeMchannel_t channels[CUBEMONMAXSIGNALS];
+cubeMchannel_t cubemChannels[CUBEMONMAXSIGNALS];
 
 void CubeM_DefChInit() {
 	for(uint8_t i=0; i<CUBEMONMAXSIGNALS; i++) {
-		channels[i].newvalue = 0;
-		channels[i].reuseoldvalue = 0;
-		channels[i].datatype = 2;
-		sprintf((char*)(channels[i].name), "Ch%d", i);
-		channels[i].value = 0.f;
+		cubemChannels[i].newvalue = 0;
+		cubemChannels[i].reuseoldvalue = 0;
+		cubemChannels[i].datatype = 2;
+		sprintf((char*)(cubemChannels[i].name), "Ch%d", i);
+		cubemChannels[i].value = 0.f;
 	}
 }
 
@@ -98,7 +98,7 @@ uint8_t CubeM_clearBuffer() {
 uint8_t CubeM_setChannelname(uint8_t channel, uint8_t *newname) {
 	uint32_t templen = strlen((char*)newname);
 	if((templen < CUBEMONSMALLBUFSIZE && templen > 0) && (channel >= 0 && channel < CUBEMONMAXSIGNALS)) {
-		strcpy((char*)(channels[channel].name), (char*)newname);
+		strcpy((char*)(cubemChannels[channel].name), (char*)newname);
 
 		return 0;
 	}
@@ -106,7 +106,7 @@ uint8_t CubeM_setChannelname(uint8_t channel, uint8_t *newname) {
 }
 
 uint8_t *CubeM_getChannelname(uint8_t channel) {
-	return channels[channel].name;
+	return cubemChannels[channel].name;
 }
 
 uint8_t CubeM_setBuffer(uint8_t *input, uint32_t length) {
@@ -144,7 +144,7 @@ uint8_t CubeM_attendUIntValue(uint8_t channel, uint32_t value) {
 		char tempstring[CUBEMONSMALLBUFSIZE*4];
 
 		uint32_t tempsize;
-		sprintf(tempstring, "%s%s%s%ld", delimiter, channels[channel].name, connector, value);
+		sprintf(tempstring, "%s%s%s%ld", delimiter, cubemChannels[channel].name, connector, value);
 		tempsize = usedbuffer + strlen((char*)tempstring) - (emptybuffer * dellen);
 
 		if(tempsize < buffersize) {
@@ -162,7 +162,7 @@ uint8_t CubeM_attendIntValue(uint8_t channel, int32_t value) {
 		char tempstring[CUBEMONSMALLBUFSIZE*4];
 
 		uint32_t tempsize;
-		sprintf(tempstring, "%s%s%s%ld", delimiter, channels[channel].name, connector, value);
+		sprintf(tempstring, "%s%s%s%ld", delimiter, cubemChannels[channel].name, connector, value);
 		tempsize = usedbuffer + strlen((char*)tempstring) - (emptybuffer * dellen);
 
 		if(tempsize < buffersize) {
@@ -180,7 +180,7 @@ uint8_t CubeM_attendFloatValue(uint8_t channel, float value, uint8_t precision) 
 		char tempstring[CUBEMONSMALLBUFSIZE*4];
 
 		uint32_t tempsize;
-		sprintf(tempstring, "%s%s%s%.*f", delimiter, channels[channel].name, connector, precision, value);
+		sprintf(tempstring, "%s%s%s%.*f", delimiter, cubemChannels[channel].name, connector, precision, value);
 		tempsize = usedbuffer + strlen((char*)tempstring) - (emptybuffer * dellen);
 
 		if(tempsize < buffersize) {
@@ -224,54 +224,54 @@ uint8_t CubeM_sendBuffer() {
 uint8_t CubeM_setDataType(uint8_t channel, cubeMDataType newtype) {
 	if(channel >= CUBEMONMAXSIGNALS || newtype >= CUBEMNROFDATATYPES) return 1;
 
-	channels[channel].datatype = newtype;
+	cubemChannels[channel].datatype = newtype;
 	return 0;
 }
 
 uint8_t CubeM_setPrecision(uint8_t channel, int8_t precision) {
 	if(channel >= CUBEMONMAXSIGNALS) return 1;
 
-	channels[channel].precision = precision;
+	cubemChannels[channel].precision = precision;
 	return 0;
 }
 
 uint8_t CubeM_setUINTValue(uint8_t channel, float value) {
 
-	if(channel >= CUBEMONMAXSIGNALS || channels[channel].datatype != CUBEMUINT) return 1;
-	channels[channel].value = value;
-	channels[channel].newvalue = 1;
+	if(channel >= CUBEMONMAXSIGNALS || cubemChannels[channel].datatype != CUBEMUINT) return 1;
+	cubemChannels[channel].value = value;
+	cubemChannels[channel].newvalue = 1;
 	return 0;
 }
 
 uint8_t CubeM_setINTValue(uint8_t channel, float value) {
 
-	if(channel >= CUBEMONMAXSIGNALS || channels[channel].datatype != CUBEMINT) return 1;
-	channels[channel].value = value;
-	channels[channel].newvalue = 1;
+	if(channel >= CUBEMONMAXSIGNALS || cubemChannels[channel].datatype != CUBEMINT) return 1;
+	cubemChannels[channel].value = value;
+	cubemChannels[channel].newvalue = 1;
 	return 0;
 }
 
 uint8_t CubeM_setFLOATValue(uint8_t channel, float value) {
 
-	if(channel >= CUBEMONMAXSIGNALS || channels[channel].datatype != CUBEMFLOAT) return 1;
-	channels[channel].value = value;
-	channels[channel].newvalue = 1;
+	if(channel >= CUBEMONMAXSIGNALS || cubemChannels[channel].datatype != CUBEMFLOAT) return 1;
+	cubemChannels[channel].value = value;
+	cubemChannels[channel].newvalue = 1;
 	return 0;
 }
 
 uint8_t CubeM_setDOUBLEValue(uint8_t channel, double value) {
 
-	if(channel >= CUBEMONMAXSIGNALS || channels[channel].datatype != CUBEMDOUBLE) return 1;
-	channels[channel].value = value;
-	channels[channel].newvalue = 1;
+	if(channel >= CUBEMONMAXSIGNALS || cubemChannels[channel].datatype != CUBEMDOUBLE) return 1;
+	cubemChannels[channel].value = value;
+	cubemChannels[channel].newvalue = 1;
 	return 0;
 }
 
 uint8_t CubeM_setLDOUBLEValue(uint8_t channel, long double value) {
 
-	if(channel >= CUBEMONMAXSIGNALS || channels[channel].datatype != CUBEMLDOUBLE) return 1;
-	channels[channel].value = value;
-	channels[channel].newvalue = 1;
+	if(channel >= CUBEMONMAXSIGNALS || cubemChannels[channel].datatype != CUBEMLDOUBLE) return 1;
+	cubemChannels[channel].value = value;
+	cubemChannels[channel].newvalue = 1;
 	return 0;
 }
 
@@ -283,23 +283,23 @@ uint8_t CubeM_sendCurValues() {
 	uint32_t tempsize = 0;
 
 	for(uint8_t i=0; i<CUBEMONMAXSIGNALS; i++) {
-		if(channels[i].newvalue == 0) continue;
+		if(cubemChannels[i].newvalue == 0) continue;
 
-		switch(channels[i].datatype) {
+		switch(cubemChannels[i].datatype) {
 		case CUBEMUINT:
-			sprintf((char*)tempbuffer, "%s%s%s%ld", delimiter, channels[i].name, connector, (uint32_t)channels[i].value);
+			sprintf((char*)tempbuffer, "%s%s%s%ld", delimiter, cubemChannels[i].name, connector, (uint32_t)cubemChannels[i].value);
 			break;
 		case CUBEMINT:
-			sprintf((char*)tempbuffer, "%s%s%s%ld", delimiter, channels[i].name, connector, (int32_t)channels[i].value);
+			sprintf((char*)tempbuffer, "%s%s%s%ld", delimiter, cubemChannels[i].name, connector, (int32_t)cubemChannels[i].value);
 			break;
 		case CUBEMFLOAT:
-			sprintf((char*)tempbuffer, "%s%s%s%.*f", delimiter, channels[i].name, connector, (int)channels[i].precision, (float)channels[i].value);
+			sprintf((char*)tempbuffer, "%s%s%s%.*f", delimiter, cubemChannels[i].name, connector, (int)cubemChannels[i].precision, (float)cubemChannels[i].value);
 			break;
 		case CUBEMDOUBLE:
-			sprintf((char*)tempbuffer, "%s%s%s%.*lf", delimiter, channels[i].name, connector, (int)channels[i].precision, (double)channels[i].value);
+			sprintf((char*)tempbuffer, "%s%s%s%.*lf", delimiter, cubemChannels[i].name, connector, (int)cubemChannels[i].precision, (double)cubemChannels[i].value);
 			break;
 		case CUBEMLDOUBLE:
-			sprintf((char*)tempbuffer, "%s%s%s%.*Lf", delimiter, channels[i].name, connector, (int)channels[i].precision, (long double)channels[i].value);
+			sprintf((char*)tempbuffer, "%s%s%s%.*Lf", delimiter, cubemChannels[i].name, connector, (int)cubemChannels[i].precision, (long double)cubemChannels[i].value);
 			break;
 		default:
 			continue;
@@ -313,7 +313,7 @@ uint8_t CubeM_sendCurValues() {
 			usedbuffer = tempsize;
 			emptybuffer = 0;
 		}
-		channels[i].newvalue = channels[i].reuseoldvalue;
+		cubemChannels[i].newvalue = cubemChannels[i].reuseoldvalue;
 	}
 
 	if(datatowrite == 1) {
@@ -369,7 +369,7 @@ uint8_t CubeM_runDebugTests() {
 		if(CubeM_setDataType(debugchnumbers[i], debugdatatypes[i])!= 0) CubeM_DEBUGERRORHANDLER(errornumber);
 
 		errornumber++;
-		if(channels[debugchnumbers[i]].datatype != debugdatatypes[i]) CubeM_DEBUGERRORHANDLER(errornumber);
+		if(cubemChannels[debugchnumbers[i]].datatype != debugdatatypes[i]) CubeM_DEBUGERRORHANDLER(errornumber);
 
 		errornumber++;
 		if(CubeM_setPrecision(debugchnumbers[i], debugprecisionvalues[i])!= 0) CubeM_DEBUGERRORHANDLER(errornumber);

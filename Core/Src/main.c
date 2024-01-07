@@ -23,6 +23,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+#include "adc.h"
+#include "signalanalyzer.h"
 #include "cubemonitor.h"
 
 /* USER CODE END Includes */
@@ -75,6 +77,15 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
+#if ADCDEBUG==0
+	adc_Init();
+#endif
+
+#if SIGANDEBUG==0
+	sigAn_Init();
+#endif
+
+
 #if CUBEMDEBUG==0
 	CubeM_Init();
 #endif
@@ -108,7 +119,15 @@ int main(void)
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
 
-#ifdef CUBEMDEBUG
+#if ADCDEBUG==1
+  adc_runDebugTests();
+#endif
+
+#if SIGANDEBUG==1
+	sigAn_Debug();
+#endif
+
+#if CUBEMDEBUG==1
   CubeM_runDebugTests();
 #endif
 

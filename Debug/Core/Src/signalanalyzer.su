@@ -1,0 +1,6 @@
+../Core/Src/signalanalyzer.c:12:9:sigAn_Init	16	static
+../Core/Src/signalanalyzer.c:22:9:sigAn_setChannel	24	static
+../Core/Src/signalanalyzer.c:28:18:sigAn_getChannel	16	static
+../Core/Src/signalanalyzer.c:32:9:sigAn_setBuffer	24	static
+../Core/Src/signalanalyzer.c:39:11:sigAn_getBuffer	16	static
+../Core/Src/signalanalyzer.c:43:9:sigAn_Debug	8	static
