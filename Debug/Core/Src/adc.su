@@ -1,0 +1,4 @@
+../Core/Src/adc.c:10:9:adc_Init	4	static
+../Core/Src/adc.c:15:9:adc_InitFilter	32	static
+../Core/Src/adc.c:32:9:adc_setADC	8	static
+../Core/Src/adc.c:37:9:adc_runDebugTests	4	static
