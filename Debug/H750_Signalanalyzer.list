@@ -23,23 +23,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   9 .comment      00000043  00000000  00000000  0002033a  2**0
                   CONTENTS, READONLY
- 10 .debug_info   0001a5db  00000000  00000000  0002037d  2**0
+ 10 .debug_info   0001a698  00000000  00000000  0002037d  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 11 .debug_abbrev 00004068  00000000  00000000  0003a958  2**0
+ 11 .debug_abbrev 0000409a  00000000  00000000  0003aa15  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 12 .debug_aranges 000014c0  00000000  00000000  0003e9c0  2**3
+ 12 .debug_aranges 000014c0  00000000  00000000  0003eab0  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 13 .debug_rnglists 00000f7f  00000000  00000000  0003fe80  2**0
+ 13 .debug_rnglists 00000f80  00000000  00000000  0003ff70  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_macro  0003bd11  00000000  00000000  00040dff  2**0
+ 14 .debug_macro  0003bd11  00000000  00000000  00040ef0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_line   0001ba7d  00000000  00000000  0007cb10  2**0
+ 15 .debug_line   0001baa2  00000000  00000000  0007cc01  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_str    0016b7fc  00000000  00000000  0009858d  2**0
+ 16 .debug_str    0016b7fc  00000000  00000000  000986a3  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_frame  00006504  00000000  00000000  00203d8c  2**2
+ 17 .debug_frame  00006514  00000000  00000000  00203ea0  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line_str 00000051  00000000  00000000  0020a290  2**0
+ 18 .debug_line_str 00000051  00000000  00000000  0020a3b4  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -142,14 +142,16 @@ Disassembly of section .text:
  800038e:	4770      	bx	lr
 
 08000390 <adc_runDebugTests>:
-uint8_t adc_setADC(ADC_HandleTypeDef newadc) {
-
+	adc.adchan = newadc;
 	return 0;
 }
 
+#if ADCDEBUG==1
 uint8_t adc_runDebugTests() {
  8000390:	b480      	push	{r7}
  8000392:	af00      	add	r7, sp, #0
+
+
 
 	return 0;
  8000394:	2300      	movs	r3, #0

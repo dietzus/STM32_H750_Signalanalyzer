@@ -32,7 +32,7 @@ typedef struct {
 	adcfilter_t filter;
 } adc_t;
 
-uint8_t adc_Init(adc_t adc, ADC_HandleTypeDef newadc);
+uint8_t adc_Init(adc_t, ADC_HandleTypeDef, uint16_t *, uint32_t);
 uint8_t adc_InitFilter(adcfilter_t filter, uint32_t average, uint32_t median);
 
 uint8_t adc_setADC(adc_t adc, ADC_HandleTypeDef newadc);

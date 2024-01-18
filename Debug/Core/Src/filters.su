@@ -1,0 +1,7 @@
+../Core/Src/filters.c:13:9:initAvgFilter	40	static
+../Core/Src/filters.c:24:9:initMedFilter	8	static
+../Core/Src/filters.c:30:9:initAvgMedFilter	8	static
+../Core/Src/filters.c:36:9:initFIRFilter	8	static
+../Core/Src/filters.c:42:9:initIIRFilter	8	static
+../Core/Src/filters.c:48:9:initFilterBuffer	8	static
+../Core/Src/filters.c:60:9:addInternalFilter	8	static
