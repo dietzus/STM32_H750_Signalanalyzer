@@ -64,8 +64,11 @@ int32_t addInternalFilter(filter_t) {
 }
 
 uint8_t applyFilter(filter_t filter, uint16_t *values, uint32_t nrvalues) {
+	uint32_t *tempvalues;
+
 	switch(filter.type) {
 	case(AVERAGE):
+
 
 		break;
 	case(MEDIAN):
