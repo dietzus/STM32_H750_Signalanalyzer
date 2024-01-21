@@ -68,7 +68,7 @@ uint8_t applyFilter(filter_t filter, uint16_t *values, uint32_t nrvalues) {
 
 	switch(filter.type) {
 	case(AVERAGE):
-
+		tempvalues = malloc(filter.averages)
 
 		break;
 	case(MEDIAN):
