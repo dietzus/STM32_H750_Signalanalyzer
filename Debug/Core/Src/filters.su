@@ -1,7 +1,9 @@
-../Core/Src/filters.c:13:9:initAvgFilter	40	static
-../Core/Src/filters.c:24:9:initMedFilter	8	static
-../Core/Src/filters.c:30:9:initAvgMedFilter	8	static
-../Core/Src/filters.c:36:9:initFIRFilter	8	static
-../Core/Src/filters.c:42:9:initIIRFilter	8	static
-../Core/Src/filters.c:48:9:initFilterBuffer	8	static
-../Core/Src/filters.c:60:9:addInternalFilter	8	static
+../Core/Src/filters.c:15:9:initAvgFilter	16	static
+../Core/Src/filters.c:26:9:initMedFilter	8	static
+../Core/Src/filters.c:32:9:initAvgMedFilter	8	static
+../Core/Src/filters.c:38:9:initFIRFilter	8	static
+../Core/Src/filters.c:44:9:initIIRFilter	8	static
+../Core/Src/filters.c:50:9:initFilterBuffer	24	static
+../Core/Src/filters.c:63:9:addInternalFilter	8	static
+../Core/Src/filters.c:68:9:applyFilter	32	static
+../Core/Src/filters.c:127:9:testFilters	136	static

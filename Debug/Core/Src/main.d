@@ -36,7 +36,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../USB_DEVICE/App/usb_device.h \
  ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h \
  ../USB_DEVICE/Target/usbd_conf.h ../Core/Inc/adc.h ../Core/Inc/main.h \
- ../Core/Inc/signalanalyzer.h ../Core/Inc/adc.h ../Core/Inc/cubemonitor.h
+ ../Core/Inc/signalanalyzer.h ../Core/Inc/adc.h ../Core/Inc/cubemonitor.h \
+ ../Core/Inc/filters.h
 ../Core/Inc/main.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
 ../Core/Inc/stm32h7xx_hal_conf.h:
@@ -80,3 +81,4 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Core/Inc/signalanalyzer.h:
 ../Core/Inc/adc.h:
 ../Core/Inc/cubemonitor.h:
+../Core/Inc/filters.h:

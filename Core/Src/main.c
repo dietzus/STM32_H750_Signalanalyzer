@@ -26,6 +26,7 @@
 #include "adc.h"
 #include "signalanalyzer.h"
 #include "cubemonitor.h"
+#include "filters.h"
 
 /* USER CODE END Includes */
 
@@ -77,6 +78,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
+#if DEBUGTESTS==0
 #if ADCDEBUG==0
 	adc_Init();
 #endif
@@ -87,7 +89,8 @@ int main(void)
 
 
 #if CUBEMDEBUG==0
-	CubeM_Init();
+	CubeM_Init(50);
+#endif
 #endif
 
   /* USER CODE END 1 */
@@ -119,6 +122,7 @@ int main(void)
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
 
+#if DEBUGTESTS==1
 #if ADCDEBUG==1
   adc_runDebugTests();
 #endif
@@ -129,6 +133,11 @@ int main(void)
 
 #if CUBEMDEBUG==1
   CubeM_runDebugTests();
+#endif
+
+#if FILTERDEBUGTESTS==1
+  testFilters(100);
+#endif
 #endif
 
   /* USER CODE END 2 */

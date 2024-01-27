@@ -12,7 +12,9 @@
 
 #include "adc.h"
 
+#if DEBUGTESTS==1
 #define SIGANDEBUG 1
+#endif
 
 #define SIGANMAXCH 3
 

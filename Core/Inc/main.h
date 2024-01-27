@@ -60,6 +60,8 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN Private defines */
 
+#define DEBUGTESTS 1
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

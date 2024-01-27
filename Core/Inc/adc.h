@@ -37,8 +37,10 @@ uint8_t adc_InitFilter(adcfilter_t filter, uint32_t average, uint32_t median);
 
 uint8_t adc_setADC(adc_t adc, ADC_HandleTypeDef newadc);
 
+#if DEBUGTESTS==1
 #if ADCDEBUG==1
 uint8_t adc_runDebugTests();
+#endif
 #endif
 
 #endif /* INC_ADC_H_ */

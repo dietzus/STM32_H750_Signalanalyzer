@@ -10,6 +10,10 @@
 
 #include "main.h"
 
+#if DEBUGTESTS==1
+#define FILTERDEBUGTESTS 1
+#endif
+
 typedef enum {
     AVERAGE,
     MEDIAN,
@@ -26,12 +30,16 @@ typedef struct {
 	uint8_t order;
 	float *coef;
 	uint8_t inPlace;
-	float *buffer;
+	uint16_t *buffer;
 	uint32_t bufsize;
 } filter_t;
 
 
 
-uint8_t initFilterBuffer(filter_t, float *, uint32_t);
+uint8_t initFilterBuffer(filter_t *, uint16_t *, uint32_t);
+
+#if FILTERDEBUGTESTS==1
+uint8_t testFilters(uint32_t);
+#endif
 
 #endif /* INC_FILTERS_H_ */
