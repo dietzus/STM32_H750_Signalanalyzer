@@ -1,4 +1,9 @@
-../Core/Src/adc.c:10:9:adc_Init	1
-../Core/Src/adc.c:23:9:adc_InitFilter	9
+../Core/Src/adc.c:12:6:adc_halfcallback	1
+../Core/Src/adc.c:20:6:adc_callback	1
+../Core/Src/adc.c:30:9:adc_Init	1
 ../Core/Src/adc.c:47:9:adc_setADC	1
-../Core/Src/adc.c:53:9:adc_runDebugTests	1
+../Core/Src/adc.c:52:19:adc_getADC	1
+../Core/Src/adc.c:56:9:adc_setFilter	1
+../Core/Src/adc.c:61:10:adc_getFilter	1
+../Core/Src/adc.c:65:9:adc_startDMA	18
+../Core/Src/adc.c:81:9:adc_runDebugTests	1

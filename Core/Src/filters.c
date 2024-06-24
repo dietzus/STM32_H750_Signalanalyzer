@@ -60,7 +60,7 @@ uint8_t initFilterBuffer(filter_t *filter, uint16_t *buffer, uint32_t bufsize) {
 	return 0;
 }
 
-int32_t addInternalFilter(filter_t) {
+int32_t addInternalFilter(filter_t filter) {
 
 	return -1;
 }
@@ -124,9 +124,34 @@ uint8_t applyFilter(filter_t filter, uint16_t *values, uint32_t nrvalues) {
 }
 
 #if FILTERDEBUGTESTS==1
+#define min(a,b) \
+   ({ __typeof__ (a) _a = (a); \
+       __typeof__ (b) _b = (b); \
+     _a < _b ? _a : _b; })
+
+#define max(a,b) \
+   ({ __typeof__ (a) _a = (a); \
+       __typeof__ (b) _b = (b); \
+     _a > _b ? _a : _b; })
+
+uint8_t filterdebug_checkWithTolerance(uint32_t a, uint32_t b, uint32_t tolerance) {
+	if(max(a, b) - min(a, b) > tolerance) return 1;
+	return 0;
+}
+
+void filterdebug_fillDebugBuffer(uint16_t *buffer, uint32_t size, uint32_t start, uint32_t stop, uint32_t step) {
+	uint32_t tempnum = start;
+	for(uint32_t i=0; i<size; i = i+step) {
+		buffer[i] = tempnum++;
+		if(tempnum > stop) tempnum=start;
+	}
+}
+
 uint8_t testFilters(uint32_t filtersize) {
 	uint16_t *testbuffer = 0;
 	if((testbuffer = malloc(filtersize*sizeof(uint16_t))) == 0) return 1;
+
+	uint32_t errorcode = 2;
 
 	uint32_t highestdivider = 1;
 	for(uint32_t i=filtersize-1; i>1; i--) {
@@ -140,47 +165,64 @@ uint8_t testFilters(uint32_t filtersize) {
 	initAvgFilter(&avgfilter, highestdivider);
 	initFilterBuffer(&avgfilter, testbuffer, 0);
 
-	for(uint32_t i=0; i<filtersize; i++) {
-		testbuffer[i] = 0;
-	}
+	uint32_t tempstart = 0;
+	uint32_t tempstop = 0;
+	uint32_t tempstep = 1;
+	filterdebug_fillDebugBuffer(testbuffer, filtersize, tempstart, tempstop, tempstep);
 
 	applyFilter(avgfilter, testbuffer, filtersize);
 
 	for(uint32_t i=0; i<filtersize; i++) {
 		if(testbuffer[i] != 0) {
-			return 2;
+			return errorcode;
 		}
 	}
+	errorcode++;
 
-	uint32_t tempnum=1;
+	tempstart = 1;
+	tempstop = 5;
+	tempstep = 1;
+	filterdebug_fillDebugBuffer(testbuffer, filtersize, tempstart, tempstop, tempstep);
+
+	applyFilter(avgfilter, testbuffer, filtersize);
+
 	for(uint32_t i=0; i<filtersize; i++) {
-		testbuffer[i] = tempnum++;
-		if(tempnum >= highestdivider) tempnum=1;
+		if(filterdebug_checkWithTolerance(testbuffer[i], 3, 2)) {
+			return errorcode;
+		}
 	}
+	errorcode++;
+
+	tempstart = 1;
+	tempstop = highestdivider;
+	tempstep = 1;
+	filterdebug_fillDebugBuffer(testbuffer, filtersize, tempstart, tempstop, tempstep);
 
 	applyFilter(avgfilter, testbuffer, filtersize);
 
 	uint32_t comparevalue = highestdivider / 2;
 	for(uint32_t i=0; i<filtersize; i++) {
-		if(testbuffer[i] != comparevalue) {
-			int32_t tempvalue = testbuffer[i];
-			return 3;
+		if(filterdebug_checkWithTolerance(testbuffer[i], comparevalue, 1)) {
+			__attribute__((unused)) uint32_t tempvalue = testbuffer[i];
+			return errorcode;
 		}
 	}
+	errorcode++;
 
-	uint16_t tempnum16=UINT16_MAX;
-	for(uint32_t i=0; i<filtersize; i++) {
-		testbuffer[i] = tempnum16;
-	}
+	tempstart = UINT16_MAX;
+	tempstop = UINT16_MAX;
+	tempstep = 1;
+	filterdebug_fillDebugBuffer(testbuffer, filtersize, tempstart, tempstop, tempstep);
 
 	applyFilter(avgfilter, testbuffer, filtersize);
 
 	comparevalue = UINT16_MAX;
 	for(uint32_t i=0; i<filtersize; i++) {
 		if(testbuffer[i] != comparevalue) {
-			return 4;
+			return errorcode;
 		}
 	}
+	errorcode++;
 
 	return 0;
 }

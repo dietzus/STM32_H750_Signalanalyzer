@@ -34,7 +34,14 @@ typedef struct {
 	uint32_t bufsize;
 } filter_t;
 
-
+uint8_t initAvgFilter(filter_t *, uint32_t);
+uint8_t initMedFilter(filter_t filter, uint32_t nrMed);
+uint8_t initAvgMedFilter(filter_t, uint32_t, uint32_t);
+uint8_t initFIRFilter(filter_t, uint8_t, float *);
+uint8_t initIIRFilter(filter_t, uint8_t, float *);
+uint8_t initFilterBuffer(filter_t *, uint16_t *, uint32_t);
+int32_t addInternalFilter(filter_t);
+uint8_t applyFilter(filter_t, uint16_t *, uint32_t);
 
 uint8_t initFilterBuffer(filter_t *, uint16_t *, uint32_t);
 

@@ -6,4 +6,6 @@
 ../Core/Src/filters.c:50:9:initFilterBuffer	2
 ../Core/Src/filters.c:63:9:addInternalFilter	1
 ../Core/Src/filters.c:68:9:applyFilter	10
-../Core/Src/filters.c:127:9:testFilters	14
+../Core/Src/filters.c:137:9:filterdebug_checkWithTolerance	2
+../Core/Src/filters.c:142:6:filterdebug_fillDebugBuffer	3
+../Core/Src/filters.c:150:9:testFilters	12
